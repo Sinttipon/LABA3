@@ -2,16 +2,16 @@
 
 #include <stdbool.h>
 
-struct ScientificWork {     // Научная публикация
-	char* name;             // Название публикации:
-	char* surname;          // Фамилия первого автора
-	char* initials;         // Инициалы первого автора
-	char* magazine;         // Название журнала
-	int year;               // Год публикации
-	int volume;             // Том журнала
-	bool is_included_RINC;  // Входит в РИНЦ
-	int n_pages;            // Количество страниц
-	int n_citations;        // Количество Цитирований 
+struct ScientificWork {     
+	char* name;             
+	char* surname;          
+	char* initials;         
+	char* magazine;         
+	int year;              
+	int volume;             
+	bool is_included_RINC;  
+	int n_pages;            
+	int n_citations;        
 };
 
 typedef struct ScientificWork ScientificWork;
@@ -25,3 +25,9 @@ ScientificWork* get_work_from_string(char*);
 int compare_by_year(void*, void*);
 
 int compare_by_statistic(void*, void*);
+
+void copy_work(void *, void*);
+
+void free_work(void *);
+
+void *get_random_work();
