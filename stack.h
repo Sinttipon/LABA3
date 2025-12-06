@@ -2,77 +2,68 @@
 
 #include "scientific_work.h"
 
-struct Node {
-	void* p_work;
-	int size;
-	// ScientificWork work;
-	Node* next;
-	Node* prev;
+struct Node
+{
+	void *p_work;
+	Node *prev;
 };
 
 typedef struct Node Node;
 
-struct Stack {
+struct Stack
+{
 	int size;
-	Node* bottom;
-	Node* top;
+	Node *top;
 };
 
 typedef struct Stack Stack;
 
-// �������������
+Node *create_node(void *);
+
+void free_node(Node *);
+
+void free_stack(void *);
+
+bool is_empty_stack(Stack *);
+
 void *create_stack();
 
-// ��������� �������� ������� (���������� �������� ���������)
-int get_size_stack(void*);
+void clear_stack(void *);
 
-// ��������� ������������� �������� �� �������
+int get_size_stack(void *);
+
 void **get_item_stack(void *, int);
 
-// ��������� ��������� �� ������
-Node* begin(Stack*);
+void push_back_stack(void *, void *);
 
-// ��������� ��������� �� �����
-Node* end(Stack*);
+void pop_back_stack(void *);
 
-// ��������� ����������� �������� �� ���������
-Node* prev(Node*);
+void swap_items_in_stack(void *, int, int);
 
-// ��������� ���������� �������� �� ���������
-Node* next(Node*);
+int comparator_stack(void *, int, int, int (*)(void *, void *));
 
-// ���������� �������� � ������
-void push_front(Stack*, void*);
+char *get_string_stack_line(void *, int);
 
-// ���������� �������� � �����
-void push_back_stack(void*, void*);
+void *begin_stack(void *);
 
-// ���������� �������� � ������������ �����
-void insert(Stack*, void*, Node*);
+void *end_stack(void *);
 
-// �������� �������� �� ������
-void pop_front(Stack*);
+void *prev_stack(void *);
 
-// �������� �������� �� �����
-void pop_back(Stack*);
+void *next_stack(void *, void *);
 
-// �������� �������� �� ������������� �����
-void erase(Stack*, Node*);
+void push_front_stack(void *, void *);
 
-// ������ ���� ��������� ���� �� �����;
-void swap_items_in_stack(void*, int, int);
+void insert_stack(void *, void *, void *);
 
-// �������������� ������� � ���������-���������
-Stack* transform(void*, int);
+void pop_front_stack(void *);
 
-// �������������� ���������-���������� � ������
-void* transform(Stack*, int*);
+void erase_stack(void *, void *);
 
-// �������.
-void clear_stack(void*);
+void *transform_array_to_stack(void *, int);
 
-// ������������ ����� � ������
-char* get_string(Stack*);
+void *transform_stack_to_array(void *, int *);
 
-// ���������� ����� �� ������ ������
-Stack* get_stack_from_string(char*);
+char *get_string_stack(void *);
+
+void *get_stack_from_string(char *);
