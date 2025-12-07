@@ -193,7 +193,6 @@ char *get_string_stack_line(void *p_container, int index)
     return get_string(p_work);
 }
 
-
 void *begin_stack(void *p_container)
 {
     Stack *stack = (Stack *)p_container;
@@ -216,7 +215,6 @@ void *begin_stack(void *p_container)
     return node;
 }
 
-
 void *prev_stack(void *p_node)
 {
     Node *node = (Node *)p_node;
@@ -226,7 +224,6 @@ void *prev_stack(void *p_node)
 
     return (void *)node->prev;
 }
-
 
 void *next_stack(void *p_container, void *p_node)
 {
@@ -263,7 +260,6 @@ void *next_stack(void *p_container, void *p_node)
     return next_node;
 }
 
-
 void push_front_stack(void *p_container, void *element)
 {
     Stack *stack = (Stack *)p_container;
@@ -284,7 +280,6 @@ void push_front_stack(void *p_container, void *element)
 
     move(stack, tmp, size);
 }
-
 
 void insert_stack(void *p_container, void *element, void *p_node)
 {
@@ -315,7 +310,6 @@ void insert_stack(void *p_container, void *element, void *p_node)
     free_stack(tmp);
 }
 
-
 void pop_front_stack(void *p_container)
 {
     Stack *stack = (Stack *)p_container;
@@ -333,7 +327,6 @@ void pop_front_stack(void *p_container)
 
     free_stack(tmp);
 }
-
 
 void erase_stack(void *p_container, void *p_node)
 {
@@ -364,7 +357,6 @@ void erase_stack(void *p_container, void *p_node)
     free_stack(tmp);
 }
 
-
 void *transform_array_to_stack(void *p_array, int size)
 {
     Stack *stack = (Stack *)create_stack();
@@ -377,7 +369,6 @@ void *transform_array_to_stack(void *p_array, int size)
 
     return (void *)stack;
 }
-
 
 void *transform_stack_to_array(void *p_container, int *p_size)
 {
