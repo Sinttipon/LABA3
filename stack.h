@@ -24,8 +24,6 @@ void free_node(Node *);
 
 void free_stack(void *);
 
-bool is_empty_stack(Stack *);
-
 void *create_stack();
 
 void clear_stack(void *);
@@ -67,3 +65,5 @@ void *transform_stack_to_array(void *, int *);
 char *get_string_stack(void *);
 
 void *get_stack_from_string(char *);
+
+void print_stack(FILE *, void *);

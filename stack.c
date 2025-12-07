@@ -428,7 +428,7 @@ void *get_stack_from_string(char *s)
     {
         if (s[i] == '\n')
         {
-            ScientificWork *p_work = get_work_from_string(s + index);
+            ScientificWork *p_work = (ScientificWork *)get_work_from_string(s + index);
             push_back_stack((void *)stack, (void *)p_work);
             index = i + 1;
             free_work(p_work);
@@ -436,4 +436,11 @@ void *get_stack_from_string(char *s)
     }
 
     return (void *)stack;
+}
+
+void print_stack(FILE *file, void *p_container)
+{
+
+    char *s = get_string_stack(p_container);
+    fputs(s, file);
 }
