@@ -22,21 +22,6 @@ int get_len(int number) {
 	return count;
 }
 
-
-/*
-struct ScientificWork {     
-	char* name;            
-	char* surname;          
-	char* initials;         
-	char* magazine;         
-	int year;               
-	int volume;            
-	bool is_included_RINC;  
-	int n_pages;            
-	int n_citations;        
-};
-*/
-
 void *get_random_work() {
 	ScientificWork *p_work = (ScientificWork *)malloc(sizeof(ScientificWork));
 
