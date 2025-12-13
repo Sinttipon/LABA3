@@ -18,9 +18,13 @@ typedef struct ScientificWork ScientificWork;
 
 int get_len(int);
 
-char* get_string(ScientificWork*);
+char *get_string(void*);
 
-ScientificWork* get_work_from_string(char*);
+char *get_format_string(void*);
+
+void *get_work_from_string(char*);
+
+int get_int_from_string(char*, int, int);
 
 int compare_by_year(void*, void*);
 

@@ -54,33 +54,121 @@ void *get_random_work() {
 	return (void *)p_work;
 }
 
-char* get_string(ScientificWork* sw) {
-	int len = strlen(sw->name) + strlen(sw->surname) +
-		strlen(sw->initials) + strlen(sw->magazine) +
-		get_len(sw->year) + get_len(sw->volume) +
-		1 + get_len(sw->n_pages) + get_len(sw->n_citations);
+char *get_string(void *s){
+	ScientificWork *sw = (ScientificWork *)s;
 
-	char* buffer = (char*)malloc(sizeof(char) * (len + 1 + 9));
+	int len = strlen(sw->name) + strlen(sw->surname) +
+			  strlen(sw->initials) + strlen(sw->magazine) +
+			  get_len(sw->year) + get_len(sw->volume) +
+			  3 + get_len(sw->n_pages) + get_len(sw->n_citations);
+
+	char *buffer = (char *)malloc(sizeof(char) * (len + 1 + 9));
 
 	if (buffer == NULL)
 		return NULL;
 
-	sprintf(buffer, "%s;%s;%s;%s;%d;%d;%d;%d;%d;",
-		sw->name, sw->surname, sw->initials, sw->magazine,
-		sw->year, sw->volume, sw->is_included_RINC,
-		sw->n_pages, sw->n_citations);
+	sprintf(buffer, "%s;%s;%s;%s;%d;%d;%s;%d;%d;",
+			sw->name, sw->surname, sw->initials, sw->magazine,
+			sw->year, sw->volume, (sw->is_included_RINC ? "YES" : "NO"),
+			sw->n_pages, sw->n_citations);
 
 	return buffer;
 }
 
-ScientificWork* get_work_from_string(char* s) {
-	ScientificWork* sw = (ScientificWork*)malloc(sizeof(ScientificWork));
+char *get_format_string(void *s)
+{
+	ScientificWork *sw = (ScientificWork *)s;
+
+	int len = 170;
+
+	char *buffer = (char *)malloc(sizeof(char) * (len + 1 + 9));
+
+	if (buffer == NULL)
+		return NULL;
+
+	sprintf(buffer, "Name: %15s Surname: %15s Initials: %8s Magazine: %10s Year: %4d Volume: %2d RINC: %3s Pages: %3d Citations: %4d",
+			sw->name, sw->surname, sw->initials, sw->magazine,
+			sw->year, sw->volume, (sw->is_included_RINC ? "YES" : "NO"),
+			sw->n_pages, sw->n_citations);
+
+	return buffer;
+}
+
+void *get_work_from_string(char *s)
+{
+	ScientificWork *sw = (ScientificWork *)malloc(sizeof(ScientificWork));
 
 	int i = 0;
 	for (; s[i] != ';'; i++);
-	sw->name = (char*)malloc(sizeof(char) * (i + 1));
-	s[i] = '\0';
-	strcpy(sw->name, s);
+	sw->name = (char *)malloc(sizeof(char) * (i + 1));
+
+	for (int j = 0; j < i; j++)
+		sw->name[j] = s[j];
+	sw->name[i] = '\0';
+	i++;
+	int start = i;
+
+	int len;
+
+	for (; s[i] != ';'; i++);
+	len = i - start;
+	sw->surname = (char *)malloc(sizeof(char) * (len + 1));
+
+	for (int j = 0; j < len; j++)
+		sw->surname[j] = s[j + start];
+	sw->surname[len] = '\0';
+	i++;
+	start = i;
+
+	for (; s[i] != ';'; i++);
+	len = i - start;
+	sw->initials = (char *)malloc(sizeof(char) * (len + 1));
+
+	for (int j = 0; j < len; j++)
+		sw->initials[j] = s[j + start];
+	sw->initials[len] = '\0';
+	i++;
+	start = i;
+
+	for (; s[i] != ';'; i++);
+	len = i - start;
+	sw->magazine = (char *)malloc(sizeof(char) * (len + 1));
+
+	for (int j = 0; j < len; j++)
+		sw->magazine[j] = s[j + start];
+	sw->magazine[len] = '\0';
+	i++;
+	start = i;
+
+	for (; s[i] != ';'; i++);
+	len = i - start;
+	sw->year = get_int_from_string(s, start, len);
+	i++;
+	start = i;
+
+	for (; s[i] != ';'; i++);
+	len = i - start;
+	sw->volume = get_int_from_string(s, start, len);
+	i++;
+	start = i;
+
+	for (; s[i] != ';'; i++);
+	len = i - start;
+	sw->is_included_RINC = (s[start] == 'Y' ? 1 : 0);
+	i++;
+	start = i;
+
+	for (; s[i] != ';'; i++);
+	len = i - start;
+	sw->n_pages = get_int_from_string(s, start, len);
+	i++;
+	start = i;
+
+	for (; s[i] != ';'; i++);
+	len = i - start;
+	sw->n_citations = get_int_from_string(s, start, len);
+	i++;
+	start = i;
 
 	return sw;
 }
@@ -131,8 +219,18 @@ int compare_by_year(void* left, void* right) {
 }
 
 int compare_by_statistic(void* left, void* right) {
+
 	ScientificWork* sw_left = (ScientificWork*)left;
 	ScientificWork* sw_right = (ScientificWork*)right;
 
 	return sw_left->n_citations * 1.0 / sw_left->n_pages - sw_right->n_citations * 1.0 / sw_right->n_pages;
+}
+
+int get_int_from_string(char *s, int start, int len)
+{
+	int number = 0;
+	for (int j = start; j < start + len; j++)
+		number = number * 10 + s[j] - '0';
+
+	return number;
 }
