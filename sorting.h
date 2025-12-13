@@ -3,4 +3,4 @@
 #include "stack.h"
 #include "processing_arguments.h"
 
-void sort(void *, SetOfFunctions);
+void sort(void *, int (*)(void *, void *));

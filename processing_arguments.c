@@ -34,6 +34,7 @@ const char *find_string_argument(int argc, char *argv[], const char *long_name, 
             }
             result[new_len] = '\0';
 
+            free(start);
             return result;
         }
 
@@ -74,7 +75,7 @@ bool find_argument(int argc, char *argv[], const char *long_name, const char *sh
     return false;
 }
 
-int try_to_generate(int argc, char *argv[], SetOfFunctions funcs)
+int try_to_generate(int argc, char *argv[])
 {
     int n = find_int_argument(argc, argv, "--generate", "-g");
 
@@ -96,7 +97,7 @@ int try_to_generate(int argc, char *argv[], SetOfFunctions funcs)
     {
         void *p_work = get_random_work();
 
-        char *s = funcs.get_str(p_work);
+        char *s = get_string(p_work);
 
         if (filename != NULL)
         {
@@ -107,7 +108,7 @@ int try_to_generate(int argc, char *argv[], SetOfFunctions funcs)
             printf("%s\n", s);
         }
         free(s);
-        free(p_work);
+        free_work(p_work);
     }
 
     if (filename != NULL)
@@ -118,7 +119,7 @@ int try_to_generate(int argc, char *argv[], SetOfFunctions funcs)
     return 0;
 }
 
-int try_to_print(int argc, char *argv[], SetOfFunctions funcs)
+int try_to_print(int argc, char *argv[])
 {
 
     if (!find_argument(argc, argv, "--print", "-p"))
@@ -154,9 +155,9 @@ int try_to_print(int argc, char *argv[], SetOfFunctions funcs)
 
     while (fscanf(file, "%s", s) != -1)
     {
-        void *object = funcs.get_object_from_str(s);
+        void *object = get_work_from_string(s);
         free(s);
-        s = funcs.get_format_string(object);
+        s = get_format_string(object);
         if (output_filename == NULL)
         {
             printf("%s\n", s);
@@ -168,8 +169,9 @@ int try_to_print(int argc, char *argv[], SetOfFunctions funcs)
         free(s);
         s = (char *)malloc(sizeof(char) * 170);
 
-        free(object);
+        free_work(object);
     }
+    free(s);
 
     if (output_filename != NULL)
     {
@@ -180,13 +182,13 @@ int try_to_print(int argc, char *argv[], SetOfFunctions funcs)
     return 0;
 }
 
-int try_to_sort(int argc, char *argv[], SetOfFunctions funcs)
+int try_to_sort(int argc, char *argv[])
 {
 
     if (!find_argument(argc, argv, "--sort", "-s"))
         return 0;
 
-    void *container = funcs.create();
+    void *container = create_stack();
 
     const char *input_filename = find_string_argument(argc, argv, "--in=", "-i");
     char s[170];
@@ -199,9 +201,9 @@ int try_to_sort(int argc, char *argv[], SetOfFunctions funcs)
         for (int i = 0; i < n; i++)
         {
             scanf("%s", s);
-            void *object = funcs.get_object_from_str(s);
-            funcs.push_back(container, object);
-            free(object);
+            void *object = get_work_from_string(s);
+            push_back_stack(container, object);
+            free_work(object);
         }
     }
     else
@@ -212,19 +214,19 @@ int try_to_sort(int argc, char *argv[], SetOfFunctions funcs)
 
         if (file == NULL)
         {
-            free(container);
+            free_stack(container);
             return 0;
         }
 
         while (fscanf(file, "%s", s) != -1)
         {
-            void *object = funcs.get_object_from_str(s);
-            funcs.push_back(container, object);
-            free(object);
+            void *object = get_work_from_string(s);
+            push_back_stack(container, object);
+            free_work(object);
         }
     }
 
-    funcs.sort(container, funcs);
+    sort(container, compare_by_year);
 
     const char *output_filename = find_string_argument(argc, argv, "--out=", "-o");
 
@@ -235,24 +237,25 @@ int try_to_sort(int argc, char *argv[], SetOfFunctions funcs)
         output = fopen(output_filename, "w");
 
         if (output == NULL)
+            free_stack(container);
             return 0;
 
-        funcs.print(output, container);
+        print_stack(output, container);
     }
     else
     {
-        funcs.print(stdout, container);
+        print_stack(stdout, container);
     }
 
-    funcs.free_container(container);
+    free_stack(container);
 }
 
-int processing(int argc, char *argv[], SetOfFunctions funcs)
+int processing(int argc, char *argv[])
 {
 
-    try_to_generate(argc, argv, funcs);
-    try_to_print(argc, argv, funcs);
-    try_to_sort(argc, argv, funcs);
+    try_to_generate(argc, argv);
+    try_to_print(argc, argv);
+    try_to_sort(argc, argv);
 
     return 0;
 }

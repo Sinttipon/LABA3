@@ -1,34 +1,15 @@
 #pragma once
 #include <stdbool.h>
 #include <stdio.h>
-struct SetOfFunctions
-{
-    void *(*create)();
-    int (*get_size)(void *);
-    void *(*get_object_from_str)(char *);
-    void (*push_back)(void *, void *);
-    void (*swap_items)(void *, int, int);
-    int (*comparator)(void *, int, int, int (*)(void *, void *));
-    int (*compare)(void *, void *);
 
-    char *(*get_str)(void *);
-    char *(*get_format_string)(void *);
 
-    void (*sort)(void *, SetOfFunctions);
-    void (*print)(FILE *, void *);
+int processing(int, char *[]);
 
-    void (*free_container)(void *);
-};
+int try_to_generate(int, char *[]);
 
-typedef struct SetOfFunctions SetOfFunctions;
+int try_to_print(int, char *[]);
 
-int processing(int, char *[], SetOfFunctions);
-
-int try_to_generate(int, char *[], SetOfFunctions);
-
-int try_to_print(int, char *[], SetOfFunctions);
-
-int try_to_sort(int, char *[], SetOfFunctions);
+int try_to_sort(int, char *[]);
 
 const char *find_string_argument(int, char *[], const char *, const char *);
 
