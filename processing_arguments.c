@@ -6,6 +6,8 @@
 
 #include "processing_arguments.h"
 #include "scientific_work.h"
+#include "stack.h"
+#include "sorting.h"
 
 const char *find_string_argument(int argc, char *argv[], const char *long_name, const char *short_name)
 {
@@ -130,7 +132,12 @@ int try_to_print(int argc, char *argv[])
     if (filename == NULL)
     {
         printf("Enter input filename: ");
-        scanf("%s", filename);
+        char temp_filename_buffer[256];
+        if (scanf("%255s", temp_filename_buffer) != 1)
+        { 
+            return 0;
+        }
+        filename = temp_filename_buffer;
     }
 
     FILE *file = NULL;
@@ -237,10 +244,12 @@ int try_to_sort(int argc, char *argv[])
         output = fopen(output_filename, "w");
 
         if (output == NULL)
+        {
             free_stack(container);
             return 0;
-
+        }
         print_stack(output, container);
+        fclose(output);
     }
     else
     {
@@ -248,6 +257,7 @@ int try_to_sort(int argc, char *argv[])
     }
 
     free_stack(container);
+    return 0;
 }
 
 int processing(int argc, char *argv[])

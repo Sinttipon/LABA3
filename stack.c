@@ -70,7 +70,6 @@ void *end_stack(void *p_container)
 
 void move(Stack *destination, Stack *source, int quantity)
 {
-    Node *node = source->top;
     for (int i = 0; i < quantity; i++)
     {
         ScientificWork *item = (ScientificWork *)malloc(sizeof(ScientificWork));
@@ -235,8 +234,6 @@ void *next_stack(void *p_container, void *p_node)
 
     Stack *tmp = (Stack *)create_stack();
 
-    int size = stack->size;
-
     while (stack->top != NULL && stack->top != p_node)
     {
         move(tmp, stack, 1);
@@ -372,19 +369,30 @@ void *transform_array_to_stack(void *p_array, int size)
 
 void *transform_stack_to_array(void *p_container, int *p_size)
 {
-    Stack *stack = (Stack *)create_stack();
+    Stack *stack = (Stack *)p_container;
 
     int n = get_size_stack(stack);
     ScientificWork *works = (ScientificWork *)malloc(sizeof(ScientificWork) * n);
-    *p_size = n;
 
-    Node *node = stack->top;
-
-    for (int i = n - 1; i >= 0; i--)
+    if (!works)
     {
-        copy_work(&works[i], node->p_work);
-        node = node->prev;
+        *p_size = 0; 
+        return NULL; 
     }
+
+    *p_size = n;
+    Stack *tmp = (Stack *)create_stack();
+
+    move(tmp, stack, n);
+
+    for (int i = 0; i < n; i++)
+    {
+        copy_work(&works[i], tmp->top->p_work);
+        pop_back_stack(tmp);
+    }
+
+    move(stack, tmp, n);
+    free_stack(tmp);
 
     return (void *)works;
 }

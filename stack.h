@@ -5,7 +5,7 @@
 struct Node
 {
 	void *p_work;
-	Node *prev;
+	struct Node *prev;
 };
 
 typedef struct Node Node;
