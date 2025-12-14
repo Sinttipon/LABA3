@@ -8,7 +8,7 @@ SOURCES = main.c \
        stack.c
 OBJECTS = $(SOURCES:.c=.o)
 
-.PHONY: all clean rebuild
+.PHONY: all clean rebuild cf
 
 all: $(TARGET)
 
@@ -26,5 +26,7 @@ stack.o: stack.c stack.h
 
 clean:
 	del /f $(OBJECTS) $(TARGET)
+
+cf: ; del /f *.txt *.csv
 
 rebuild: clean all

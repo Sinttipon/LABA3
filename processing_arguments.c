@@ -189,6 +189,11 @@ int try_to_print(int argc, char *argv[])
     return 0;
 }
 
+static int compare_by_year_desc_wrapper(void *left, void *right)
+{
+    return -compare_by_year(left, right);
+}
+
 int try_to_sort(int argc, char *argv[])
 {
 
@@ -231,9 +236,25 @@ int try_to_sort(int argc, char *argv[])
             push_back_stack(container, object);
             free_work(object);
         }
+        fclose(file);
+    }
+    
+    const char *sort_type = find_string_argument(argc, argv, "--type=", "-t");
+    int (*compare_func)(void *, void *) = compare_by_year;
+
+    if (sort_type != NULL)
+    {
+        if (strcmp(sort_type, "desc") == 0)
+        {
+            compare_func = compare_by_year_desc_wrapper;
+        }
+        else if (strcmp(sort_type, "asc") == 0)
+        {
+            compare_func = compare_by_year;
+        }
     }
 
-    sort(container, compare_by_year);
+    sort(container, compare_func);
 
     const char *output_filename = find_string_argument(argc, argv, "--out=", "-o");
 
