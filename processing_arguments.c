@@ -12,7 +12,7 @@
 const char *find_string_argument(int argc, char *argv[], const char *long_name, const char *short_name)
 {
 
-    for (int i = 1; i < argc - 1; i++)
+    for (int i = 1; i < argc; i++)
     {
         const char *s = argv[i];
         int len = strlen(s);
@@ -85,7 +85,7 @@ int try_to_generate(int argc, char *argv[])
         return 0;
 
     const char *filename = find_string_argument(argc, argv, "--out=", "-o");
-
+    printf("%s",filename);
     FILE *file = NULL;
     if (filename != NULL)
     {
@@ -134,7 +134,7 @@ int try_to_print(int argc, char *argv[])
         printf("Enter input filename: ");
         char temp_filename_buffer[256];
         if (scanf("%255s", temp_filename_buffer) != 1)
-        { 
+        {
             return 0;
         }
         filename = temp_filename_buffer;
@@ -238,7 +238,7 @@ int try_to_sort(int argc, char *argv[])
         }
         fclose(file);
     }
-    
+
     const char *sort_type = find_string_argument(argc, argv, "--type=", "-t");
     int (*compare_func)(void *, void *) = compare_by_year;
 
