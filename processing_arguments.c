@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "processing_arguments.h"
 #include "scientific_work.h"
@@ -287,6 +288,60 @@ int processing(int argc, char *argv[])
     try_to_generate(argc, argv);
     try_to_print(argc, argv);
     try_to_sort(argc, argv);
+    try_to_benchmark(argc, argv);
 
+    return 0;
+}
+
+int try_to_benchmark(int argc, char *argv[])
+{
+    if (!find_argument(argc, argv, "--benchmark", "-b"))
+    {
+        return 0;
+    }
+
+    const char *output_filename = find_string_argument(argc, argv, "--out=", "-o");
+    if (output_filename == NULL)
+    {
+        output_filename = "benchmark_results.csv";
+    }
+
+    FILE *out = fopen(output_filename, "w");
+    
+    int sizes[] = {10,100,200,300,400,500};
+    int n_sizes = sizeof(sizes) / sizeof(sizes[0]);
+
+    for (int i = 0; i < n_sizes; i++)
+    {
+        int n = sizes[i];
+        void *container = create_stack();
+        if (container == NULL)
+        {
+            fclose(out);
+            return 1;
+        }
+
+        for (int j = 0; j < n; j++)
+        {
+            void *work = get_random_work();
+            if (work != NULL)
+            {
+                push_back_stack(container, work);
+            }
+        }
+
+        clock_t start = clock();
+
+        sort(container, compare_by_year);
+
+        clock_t end = clock();
+        double time = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+        fprintf(out, "%d,%.6f\n", n, time);
+        puts("processing...");
+        free_stack(container);
+    }
+
+    fclose(out);
     return 0;
 }
