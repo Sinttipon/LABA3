@@ -12,7 +12,7 @@ typedef struct Node Node;
 
 struct Stack
 {
-	int size;
+	unsigned int size;
 	Node *top;
 };
 

@@ -125,7 +125,7 @@ int try_to_print(int argc, char *argv[])
 
     if (filename == NULL)
     {
-        printf("Enter input filename: ");
+        printf("Введите файл куда : ");
         char temp_filename_buffer[256];
         if (scanf("%255s", temp_filename_buffer) != 1)
         {
@@ -199,7 +199,7 @@ int try_to_sort(int argc, char *argv[])
     char s[170];
     if (input_filename == NULL)
     {
-        printf("Enter quantity: ");
+        printf("Введите кол-во : ");
         int n = 0;
         scanf("%d", &n);
 
