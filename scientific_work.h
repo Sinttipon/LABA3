@@ -14,11 +14,11 @@ struct ScientificWork {
 	char* surname;          
 	char* initials;         
 	char* magazine;         
-	int year;              
-	int volume;             
+	unsigned int year;              
+	unsigned int volume;             
 	bool is_included_RINC;  
 	int n_pages;            
-	int n_citations;        
+	unsigned int n_citations;        
 };
 
 typedef struct ScientificWork ScientificWork;
