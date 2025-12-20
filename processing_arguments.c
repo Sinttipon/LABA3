@@ -86,14 +86,13 @@ int try_to_generate(int argc, char *argv[])
         return 0;
 
     const char *filename = find_string_argument(argc, argv, "--out=", "-o");
-    printf("%s",filename);
-    FILE *file = NULL;
+    FILE *file = stdout;
     if (filename != NULL)
     {
-        file = fopen(filename, "w");
+        FILE *temp = fopen(filename, "w");
 
-        if (file == NULL)
-            return 0;
+        if (temp != NULL)
+            file = temp;
     }
 
     for (int i = 0; i < n; i++)
@@ -102,14 +101,8 @@ int try_to_generate(int argc, char *argv[])
 
         char *s = get_string(p_work);
 
-        if (filename != NULL)
-        {
-            fprintf(file, "%s\n", s);
-        }
-        else
-        {
-            printf("%s\n", s);
-        }
+        fprintf(file,"%s\n",s);
+
         free(s);
         free_work(p_work);
     }
@@ -149,14 +142,13 @@ int try_to_print(int argc, char *argv[])
 
     const char *output_filename = find_string_argument(argc, argv, "--out=", "-o");
 
-    FILE *output = NULL;
+    FILE *output = stdout;
 
     if (output_filename != NULL)
     {
-        output = fopen(output_filename, "w");
-
-        if (output == NULL)
-            return 0;
+        FILE *temp = fopen(output_filename, "w");
+        if (temp != NULL)
+            output = temp;
     }
 
     char *s = (char *)malloc(sizeof(char) * 170);
@@ -174,7 +166,7 @@ int try_to_print(int argc, char *argv[])
         {
             fprintf(output, "%s\n", s);
         }
-        free(s);
+        free(s); 
         s = (char *)malloc(sizeof(char) * 170);
 
         free_work(object);
@@ -254,32 +246,31 @@ int try_to_sort(int argc, char *argv[])
             compare_func = compare_by_year;
         }
     }
-
     sort(container, compare_func);
 
     const char *output_filename = find_string_argument(argc, argv, "--out=", "-o");
 
-    FILE *output = NULL;
+    FILE *output = stdout;
 
     if (output_filename != NULL)
     {
-        output = fopen(output_filename, "w");
+        FILE* temp = fopen(output_filename, "w");
 
-        if (output == NULL)
+        if (temp != NULL)
         {
-            free_stack(container);
-            return 0;
+            output=temp;
         }
-        print_stack(output, container);
-        fclose(output);
     }
-    else
+    print_stack(output, container);
+
+    if (output != stdout)
     {
-        print_stack(stdout, container);
+        fclose(output);
     }
 
     free_stack(container);
     return 0;
+    
 }
 
 int processing(int argc, char *argv[])
@@ -308,7 +299,7 @@ int try_to_benchmark(int argc, char *argv[])
 
     FILE *out = fopen(output_filename, "w");
     
-    int sizes[] = {10,100,200,300,400,500};
+    int sizes[] = {10,100,200,300,400};
     int n_sizes = sizeof(sizes) / sizeof(sizes[0]);
 
     for (int i = 0; i < n_sizes; i++)
@@ -338,7 +329,7 @@ int try_to_benchmark(int argc, char *argv[])
         double time = ((double)(end - start)) / CLOCKS_PER_SEC;
 
         fprintf(out, "%d,%.6f\n", n, time);
-        puts("processing...");
+        printf("Получение денных %d из %d ...\n", i, n_sizes-1);
         free_stack(container);
     }
 
