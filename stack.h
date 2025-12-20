@@ -36,6 +36,7 @@ void free_stack(void *);
 /**
  * @brief Создаёт новый пустой стек
  * @return Указатель на новый стек
+ */
 void *create_stack();
 /**
  * @brief Очищает стек, удаляя все элементы
